@@ -55,11 +55,14 @@ def date_min_days(day: int, year: int) -> bool:
     else:
         return False
 
+
 class OtherDate:
     def __init__(self, day=4, month=2, year=2012):
         self.otherday = day
         self.Othermont = month
         self.Otheryear = year
+
+
 @pytest.mark.usefixtures("Get_Date")
 class TestDate:
 
@@ -151,6 +154,12 @@ class TestDate:
         logging.info(f"date is, {self.day}/{self.month}/{self.year}, date on next day {day}/{month}/{year}")
 
     def test_Next_Days(self, days=10):
+        """
+        1. received int value to add to the date object.
+        2. update the date with add number days of the days.
+        3. assert and evaluate the update day with added days, and logging info message.
+        param: day: int, month: int , year:int, total_days: int
+        """
         day = 0
         month = self.month
         year = self.year
@@ -204,10 +213,11 @@ class TestDate:
         assert other_day != current_date
         logging.info(f"{days} days add to month, {self.day}/{self.month}/{self.year}")
 
-    def test_Subtract(self):
+    def test__Sub__(self):
         """
-
-        :return:
+        1. subtract the date values with the current day.
+        2. convert the result  into days.
+        :return: sum of the days.
         """
         other = datetime.datetime.now()
 
@@ -215,59 +225,63 @@ class TestDate:
         month = abs((self.month - other.month) * 31)
         year = abs(((self.year - other.year) * 12) * 31)
 
-        assert (day+month+year) == 2744, logging.error("days is not equal")
-        logging.info(f"sum of days is :{day+month+year}")
+        assert (day + month + year) == 2745, logging.error("days is not equal")
+        logging.info(f"sum of days is :{day + month + year}")
 
-    def __ne__(self, other: "object") -> bool:
-        """ received other date obj and return True if not equales"""
+    def test__eq__(self):
+        """
+        1. assert and evaluate the date values with current date if equal.
+        .2 logging info message.
+        """
         other = datetime.datetime.now()
-        if self._day != other.day:
-            return True
-        elif self._month != other.month:
-            return True
-        elif self._year != other.year:
-            return True
-        else:
-            return False
+        assert self.day == other.day and self.month == other.month and self.year == other.year, logging.warning(
+            "dates not equal")
+        logging.info("scope equal")
 
-    def __gt__(self, other: "object") -> bool:
+    def test__ne__(self):
+        """
+        1. assert and evaluate the date values with the current date if not equal.
+        2. logging info message.
+        """
+        other = datetime.datetime.now()
+        assert self.day != other.day or self.month != other.month or self.year != other.year, logging.warning(
+            "This test warning")
+        logging.info("date is not equal to current date")
+
+    def test__gt__(self):
+        """
+        1. assert and evaluate the date values and the current value if date is greater.
+        2. logging info message.
+        """
+        flag = False
+        other = datetime.datetime.now()
+        if self.year >= other.year:
+            if self.year > other.year:
+                flag = True
+        elif self.year == other.year:
+            if self.month > other.month:
+                flag = True
+            elif self.month == other.month:
+                if self.day > other.day:
+                    flag = True
+        assert flag, logging.error("date is not greater than current date")
+        logging.info("date is grater than current date")
+
+    def test__lt__(self):
+        """
+        1. assert and evaluate the date values with the current date if date is less than current.
+        2. logging info message.
+        """
+        flag = False
         other = datetime.datetime.now()
         if self.year <= other.year:
             if self.year < other.year:
-                return True
-            elif self.year == other.year:
-                if self.month < other.month:
-                    return True
-                elif self.month == other.month:
-                    if self.day < other.day:
-                        return True
-                    else:
-                        return False
-        else:
-            return False
-
-    def test__gt__(__gt__):
-        flag = __gt__
-        assert flag == __gt__
-        logging.info("scope of greater then")
-
-    def __lt__(self, other:"object") -> bool:
-        other = datetime.datetime.now()
-        if self.year <= other.year:
-            if self.year < other.year:
-                return True
-            elif self.year == other.year:
-                if self.month < other.month:
-                    return  True
-                elif self.month == other.month:
-                    if self.day < other.day:
-                        return True
-                    else:
-                        return False
-        else:
-            return False
-
-    def test__lt__(__lt__):
-        flag = __lt__
-        assert flag == __lt__
-        logging.info("scope of less then")
+                flag = True
+        elif self.year == other.year:
+            if self.month < other.month:
+                flag = True
+            elif self.month == other.month:
+                if self.day < other.day:
+                    flag = True
+        assert flag, logging.error("date is not less greater than current date")
+        logging.info("date is less than current date")
